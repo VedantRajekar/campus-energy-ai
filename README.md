@@ -1,6 +1,6 @@
 # 🌍 Campus Energy AI
 
-### 🚀 AI-Powered Energy Forecasting & Optimization System
+###  AI-Powered Energy Forecasting & Optimization System
 
 An end-to-end machine learning project that predicts, analyzes, and optimizes electricity usage across a campus using real-world inspired scenarios.
 
@@ -10,10 +10,10 @@ An end-to-end machine learning project that predicts, analyzes, and optimizes el
 
 This project is divided into two phases:
 
-* 📅 **January – Energy Forecasting**
-* ⚡ **February – Energy Optimization**
+*  **January – Energy Forecasting**
+*  **February – Energy Optimization**
 
-👉 Together, they form a **complete intelligent energy management system** that:
+ Together, they form a **complete intelligent energy management system** that:
 
 * Predicts future electricity usage
 * Identifies patterns
@@ -22,13 +22,13 @@ This project is divided into two phases:
 
 ---
 
-## 📅 Phase 1: Energy Forecasting (January)
+##  Phase 1: Energy Forecasting (January)
 
 ### 🏢 Week 1 – Dorm Peak Prediction
 
 * Moving Average + Linear Regression
 * Predicts evening electricity spikes (6 PM – 11 PM)
-* 📊 R² Score: 0.371
+*  R² Score: 0.371
 
 ### 🎓 Week 2 – Classroom Forecasting
 
@@ -40,13 +40,13 @@ This project is divided into two phases:
 
 * Exponential Smoothing
 * Detects increased usage during exams
-* 📈 +14.6% energy rise predicted
+*  +14.6% energy rise predicted
 
 ### 🍽️ Week 4 – Cafeteria (Weather Model)
 
 * Linear Regression with Temperature
 * Real-time energy tracking
-* 🌡️ Temp Coefficient: 0.648
+*  Temp Coefficient: 0.648
 
 ---
 
@@ -56,7 +56,7 @@ This project is divided into two phases:
 
 * Decision Tree Model
 * Optimizes cooling across 4 zones
-* 📊 Accuracy: 88%
+*  Accuracy: 88%
 
 ### ⚽ Week 6 – Sports Facility AI
 
@@ -68,27 +68,27 @@ This project is divided into two phases:
 
 * K-Means Clustering
 * Identifies low, medium, high usage groups
-* 💰 High energy-saving potential
+*  High energy-saving potential
 
 ### 🚗 Week 8 – Smart Parking
 
 * Polynomial Regression (Degree 2)
 * Smart lighting based on vehicle count
-* 🚨 Anomaly Detection
+*  Anomaly Detection
 
 ### 🧺 Week 9 – Laundry AI
 
 * Naive Bayes (Classification) + Prophet (Forecasting)
 * Predicts peak usage
-* 📊 Accuracy: 77%
+*  Accuracy: 77%
 
 ### 🌍 Week 10 – Campus Energy Tracker
 
 * Ensemble Model
 * Combines all systems
-* ⚡ Total Energy: 68.4K kWh
-* 🌱 CO₂ Saved: 5951 kg
-* 📈 Efficiency: 87%
+*  Total Energy: 68.4K kWh
+*  CO₂ Saved: 5951 kg
+*  Efficiency: 87%
 
 ---
 
@@ -144,12 +144,12 @@ This project is divided into two phases:
 
 ## 🧠 Key Features
 
-* 📊 Interactive dashboards for each module
-* 🔮 Time-series forecasting models
-* 🤖 Advanced ML algorithms (LSTM, Decision Trees, K-Means)
-* 🌡️ Real-time monitoring
-* 🌱 Carbon footprint tracking
-* ⚡ Energy optimization insights
+*  Interactive dashboards for each module
+*  Time-series forecasting models
+*  Advanced ML algorithms (LSTM, Decision Trees, K-Means)
+*  Real-time monitoring
+*  Carbon footprint tracking
+*  Energy optimization insights
 
 ---
 
@@ -174,9 +174,9 @@ This project is divided into two phases:
 
 This system can be applied to:
 
-* 🏫 Universities
-* 🏢 Smart buildings
-* 🏙️ Smart cities
+*  Universities
+*  Smart buildings
+*  Smart cities
 
 👉 Benefits:
 
@@ -189,8 +189,8 @@ This system can be applied to:
 ## 👨‍💻 Author
 
 **Vedant Rajekar**
-🎓 B.Tech CSE (AI/ML)
-📍 Symbiosis Institute of Technology, Nagpur
+ B.Tech CSE (AI/ML)
+ Symbiosis Institute of Technology, Nagpur
 
 ---
 
