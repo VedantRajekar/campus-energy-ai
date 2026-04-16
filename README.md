@@ -118,27 +118,27 @@ This project is divided into two phases:
 
 #### 🏭 Week 5 – HVAC
 
-![Week 5](assets/february/week5.png)
+![Week 5](assets/februrary/week5.png)
 
 #### ⚽ Week 6 – Sports
 
-![Week 6](assets/february/week6.png)
+![Week 6](assets/februrary/week6.png)
 
 #### 🏢 Week 7 – Clustering
 
-![Week 7](assets/february/week7.png)
+![Week 7](assets/februrary/week7.png)
 
 #### 🚗 Week 8 – Parking
 
-![Week 8](assets/february/week8.png)
+![Week 8](assets/februrary/week8.png)
 
 #### 🧺 Week 9 – Laundry
 
-![Week 9](assets/february/week9.png)
+![Week 9](assets/februrary/week9.png)
 
 #### 🌍 Week 10 – Campus
 
-![Week 10](assets/february/week10.png)
+![Week 10](assets/februrary/week10.png)
 
 ---
 
