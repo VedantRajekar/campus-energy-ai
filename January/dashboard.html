@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>January Energy Forecasting Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .animate-pulse-custom {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        .tab-active {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 min-h-screen">
+    
+    <!-- Header -->
+    <div class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-6 py-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                        Campus Energy Forecasting
+                    </h1>
+                    <p class="text-gray-600 mt-1">January 2024 - Complete 4-Week Model</p>
+                </div>
+                <div class="flex items-center space-x-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-full shadow-lg">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    <span class="font-semibold">All Systems Active</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="max-w-7xl mx-auto px-6 py-6">
+        <div class="flex space-x-3 bg-white p-2 rounded-xl shadow-md">
+            <button onclick="showWeek(1)" id="tab-1" class="flex-1 px-6 py-4 rounded-lg font-semibold transition-all duration-200 tab-active text-white">
+                <div class="text-2xl mb-1">🏢</div>
+                <div class="text-sm">Week 1</div>
+                <div class="text-xs opacity-80">Dorms - Peak Hours</div>
+            </button>
+            <button onclick="showWeek(2)" id="tab-2" class="flex-1 px-6 py-4 rounded-lg font-semibold transition-all duration-200 text-gray-600 hover:bg-gray-50">
+                <div class="text-2xl mb-1">🎓</div>
+                <div class="text-sm">Week 2</div>
+                <div class="text-xs opacity-80">Classrooms - ARIMA</div>
+            </button>
+            <button onclick="showWeek(3)" id="tab-3" class="flex-1 px-6 py-4 rounded-lg font-semibold transition-all duration-200 text-gray-600 hover:bg-gray-50">
+                <div class="text-2xl mb-1">📚</div>
+                <div class="text-sm">Week 3</div>
+                <div class="text-xs opacity-80">Library - Exams</div>
+            </button>
+            <button onclick="showWeek(4)" id="tab-4" class="flex-1 px-6 py-4 rounded-lg font-semibold transition-all duration-200 text-gray-600 hover:bg-gray-50">
+                <div class="text-2xl mb-1">🍽️</div>
+                <div class="text-sm">Week 4</div>
+                <div class="text-xs opacity-80">Cafeteria - Weather</div>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-6 pb-12">
+        <!-- Week 1 Content -->
+        <div id="week-1" class="space-y-6">
+            <div class="bg-gradient-to-r from-amber-500 to-orange-600 p-8 rounded-2xl text-white">
+                <h2 class="text-3xl font-bold mb-2">Peak Hour Electricity Spikes (Dorms)</h2>
+                <p class="text-amber-100">Moving average smoothing and linear regression to predict evening peaks based on past week</p>
+                <div class="mt-4 grid grid-cols-3 gap-4">
+                    <div class="bg-white/20 rounded-lg p-4 backdrop-blur">
+                        <div class="text-sm opacity-90">R² Score</div>
+                        <div class="text-2xl font-bold">0.371</div>
+                    </div>
+                    <div class="bg-white/20 rounded-lg p-4 backdrop-blur">
+                        <div class="text-sm opacity-90">Data Points</div>
+                        <div class="text-2xl font-bold">336</div>
+                    </div>
+                    <div class="bg-white/20 rounded-lg p-4 backdrop-blur">
+                        <div class="text-sm opacity-90">Peak Hours</div>
+                        <div class="text-2xl font-bold">18:00-23:00</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-lg font-semibold mb-4 text-gray-800">Historical Evening Peaks</h3>
+                    <div class="chart-container">
+                        <canvas id="week1-chart1"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-lg font-semibold mb-4 text-gray-800">7-Day Evening Peak Forecast</h3>
+                    <div class="chart-container">
+                        <canvas id="week1-chart2"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Week 2 Content (Initially Hidden) -->
+        <div id="week-2" class="space-y-6 hidden">
+            <div class="bg-gradient-to-r from-blue-500 to-indigo-600 p-8 rounded-2xl text-white">
+                <h2 class="text-3xl font-bold mb-2">Classroom Usage Forecasting</h2>
+                <p class="text-blue-100">ARIMA model for next-hour electricity predictions with confidence intervals</p>
+                <div class="mt-4 grid grid-cols-2 gap-4">
+                    <div class="bg-white/20 rounded-lg p-4 backdrop-blur">
+                        <div class="text-sm opacity-90">Forecast Horizon</div>
+                        <div class="text-2xl font-bold">24 Hours</div>
+                    </div>
+                    <div class="bg-white/20 rounded-lg p-4 backdrop-blur">
+                        <div class="text-sm opacity-90">Model Type</div>
+                        <div class="text-2xl font-bold">ARIMA(2,1,2)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+                <h3 class="text-lg font-semibold mb-4 text-gray-800">24-Hour Forecast with Confidence Intervals</h3>
+                <div class="chart-container">
+                    <canvas id="week2-chart1"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Week 3 Content (Initially Hidden) -->
+        <div id="week-3" class="space-y-6 hidden">
+            <div class="bg-gradient-to-r from-purple-500 to-pink-600 p-8 rounded-2xl text-white">
+                <h2 class="text-3xl font-bold mb-2">Library Energy During Exams</h2>
+                <p class="text-purple-100">Exponential smoothing for semester-end forecasts with exam period detection</p>
+                <div class="mt-4 grid grid-cols-3 gap-4">
+                    <div class="bg-white/20 rounded-lg p-4 backdrop-blur">
+                        <div class="text-sm opacity-90">Current Avg (7d)</div>
+                        <div class="text-2xl font-bold">45.2 kWh</div>
+                    </div>
+                    <div class="bg-white/20 rounded-lg p-4 backdrop-blur">
+                        <div class="text-sm opacity-90">Predicted Avg</div>
+                        <div class="text-2xl font-bold">51.8 kWh</div>
+                    </div>
+                    <div class="bg-white/20 rounded-lg p-4 backdrop-blur">
+                        <div class="text-sm opacity-90">Change</div>
+                        <div class="text-2xl font-bold text-red-200">+14.6%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+                <h3 class="text-lg font-semibold mb-4 text-gray-800">Daily Energy Consumption Trend</h3>
+                <div class="chart-container">
+                    <canvas id="week3-chart1"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Week 4 Content (Initially Hidden) -->
+        <div id="week-4" class="space-y-6 hidden">
+            <div class="bg-gradient-to-r from-green-500 to-emerald-600 p-8 rounded-2xl text-white">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h2 class="text-3xl font-bold mb-2">Cafeteria Load Prediction</h2>
+                        <p class="text-green-100">Weather-based linear regression for lunch-hour surge prediction</p>
+                    </div>
+                    <div class="flex items-center space-x-2 bg-white/20 rounded-lg px-4 py-2 backdrop-blur">
+                        <div class="w-3 h-3 bg-red-400 rounded-full animate-pulse-custom"></div>
+                        <span class="font-semibold">LIVE</span>
+                    </div>
+                </div>
+                <div class="mt-4 grid grid-cols-3 gap-4">
+                    <div class="bg-white/20 rounded-lg p-4 backdrop-blur">
+                        <div class="text-sm opacity-90">R² Score</div>
+                        <div class="text-2xl font-bold">0.113</div>
+                    </div>
+                    <div class="bg-white/20 rounded-lg p-4 backdrop-blur">
+                        <div class="text-sm opacity-90">Temp Coefficient</div>
+                        <div class="text-2xl font-bold">0.648</div>
+                    </div>
+                    <div class="bg-white/20 rounded-lg p-4 backdrop-blur">
+                        <div class="text-sm opacity-90">Current Time</div>
+                        <div class="text-lg font-bold" id="current-time">--:--:--</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg border-2 border-green-200">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Real-Time Load Monitoring</h3>
+                    <div class="flex items-center space-x-2 text-green-600">
+                        <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse-custom"></div>
+                        <span class="text-sm font-medium">Updating every 2s</span>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="week4-chart1"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="bg-gray-900 text-white py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="text-gray-400">
+                January Energy Forecasting System • Built with Chart.js & Tailwind CSS • 2024
+            </p>
+            <div class="mt-4 flex justify-center space-x-6 text-sm text-gray-500">
+                <span>✓ Moving Average</span>
+                <span>✓ Linear Regression</span>
+                <span>✓ ARIMA</span>
+                <span>✓ Exponential Smoothing</span>
+                <span>✓ Real-time Updates</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data (in a real implementation, this would be loaded from JSON files)
+        const week1Historical = {
+            labels: ['18:00', '19:00', '20:00', '21:00', '22:00', '23:00', '18:00', '19:00'],
+            actual: [52, 58, 65, 68, 62, 55, 54, 59],
+            smoothed: [50, 55, 60, 64, 63, 58, 53, 56]
+        };
+
+        const week1Forecast = {
+            labels: ['18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
+            predicted: [53, 58, 64, 67, 61, 54]
+        };
+
+        const week2Forecast = {
+            labels: Array.from({length: 24}, (_, i) => `H${i+1}`),
+            forecast: [12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 35, 34, 32, 30, 28, 26, 24, 22, 20, 18, 16, 14],
+            upper: [15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 38, 37, 35, 33, 31, 29, 27, 25, 23, 21, 19, 17],
+            lower: [9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 32, 31, 29, 27, 25, 23, 21, 19, 17, 15, 13, 11]
+        };
+
+        const week3Data = {
+            labels: Array.from({length: 28}, (_, i) => `Day ${i+1}`),
+            historical: Array.from({length: 14}, () => 40 + Math.random() * 20),
+            forecast: Array.from({length: 14}, () => 45 + Math.random() * 25)
+        };
+
+        const week4Data = {
+            labels: Array.from({length: 24}, (_, i) => `${i}:00`),
+            consumption: Array.from({length: 24}, (_, i) => {
+                const mealPeak = i >= 12 && i <= 14 ? 30 : 0;
+                return 10 + mealPeak + Math.random() * 5;
+            })
+        };
+
+        let charts = {};
+        let liveInterval = null;
+
+        function createCharts() {
+            // Week 1 Chart 1
+            const ctx1 = document.getElementById('week1-chart1').getContext('2d');
+            charts.week1_1 = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: week1Historical.labels,
+                    datasets: [{
+                        label: 'Actual',
+                        data: week1Historical.actual,
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        tension: 0.4
+                    }, {
+                        label: 'Moving Avg',
+                        data: week1Historical.smoothed,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' }
+                    }
+                }
+            });
+
+            // Week 1 Chart 2
+            const ctx2 = document.getElementById('week1-chart2').getContext('2d');
+            charts.week1_2 = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: week1Forecast.labels,
+                    datasets: [{
+                        label: 'Predicted kWh',
+                        data: week1Forecast.predicted,
+                        backgroundColor: '#f59e0b',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' }
+                    }
+                }
+            });
+
+            // Week 2 Chart
+            const ctx3 = document.getElementById('week2-chart1').getContext('2d');
+            charts.week2_1 = new Chart(ctx3, {
+                type: 'line',
+                data: {
+                    labels: week2Forecast.labels,
+                    datasets: [{
+                        label: 'Upper CI',
+                        data: week2Forecast.upper,
+                        borderColor: '#93c5fd',
+                        backgroundColor: 'rgba(147, 197, 253, 0.2)',
+                        fill: '+1',
+                        tension: 0.4
+                    }, {
+                        label: 'Forecast',
+                        data: week2Forecast.forecast,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4,
+                        borderWidth: 3
+                    }, {
+                        label: 'Lower CI',
+                        data: week2Forecast.lower,
+                        borderColor: '#93c5fd',
+                        backgroundColor: 'rgba(147, 197, 253, 0.2)',
+                        fill: false,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' }
+                    }
+                }
+            });
+
+            // Week 3 Chart
+            const ctx4 = document.getElementById('week3-chart1').getContext('2d');
+            const combinedLabels = [...week3Data.labels.slice(0, 14), ...week3Data.labels.slice(14)];
+            const combinedHistorical = [...week3Data.historical, ...Array(14).fill(null)];
+            const combinedForecast = [...Array(14).fill(null), ...week3Data.forecast];
+            
+            charts.week3_1 = new Chart(ctx4, {
+                type: 'line',
+                data: {
+                    labels: combinedLabels,
+                    datasets: [{
+                        label: 'Historical',
+                        data: combinedHistorical,
+                        borderColor: '#a855f7',
+                        backgroundColor: 'rgba(168, 85, 247, 0.1)',
+                        tension: 0.4,
+                        spanGaps: false
+                    }, {
+                        label: 'Forecast',
+                        data: combinedForecast,
+                        borderColor: '#ec4899',
+                        backgroundColor: 'rgba(236, 72, 153, 0.1)',
+                        borderDash: [5, 5],
+                        tension: 0.4,
+                        spanGaps: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' }
+                    }
+                }
+            });
+
+            // Week 4 Chart
+            const ctx5 = document.getElementById('week4-chart1').getContext('2d');
+            charts.week4_1 = new Chart(ctx5, {
+                type: 'line',
+                data: {
+                    labels: week4Data.labels,
+                    datasets: [{
+                        label: 'Consumption (kWh)',
+                        data: week4Data.consumption,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        tension: 0.4,
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        duration: 500
+                    },
+                    plugins: {
+                        legend: { position: 'top' }
+                    }
+                }
+            });
+        }
+
+        function showWeek(weekNum) {
+            // Hide all weeks
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById(`week-${i}`).classList.add('hidden');
+                const tab = document.getElementById(`tab-${i}`);
+                tab.classList.remove('tab-active', 'text-white');
+                tab.classList.add('text-gray-600', 'hover:bg-gray-50');
+            }
+
+            // Show selected week
+            document.getElementById(`week-${weekNum}`).classList.remove('hidden');
+            const activeTab = document.getElementById(`tab-${weekNum}`);
+            activeTab.classList.add('tab-active', 'text-white');
+            activeTab.classList.remove('text-gray-600', 'hover:bg-gray-50');
+
+            // Stop live updates
+            if (liveInterval) {
+                clearInterval(liveInterval);
+                liveInterval = null;
+            }
+
+            // Start live updates for Week 4
+            if (weekNum === 4) {
+                startLiveUpdates();
+            }
+        }
+
+        function startLiveUpdates() {
+            function updateTime() {
+                const now = new Date();
+                document.getElementById('current-time').textContent = now.toLocaleTimeString();
+            }
+            updateTime();
+
+            function updateChart() {
+                // Simulate real-time data update
+                const chart = charts.week4_1;
+                const newValue = 15 + Math.random() * 25;
+                
+                chart.data.datasets[0].data.shift();
+                chart.data.datasets[0].data.push(newValue);
+                
+                const now = new Date();
+                chart.data.labels.shift();
+                chart.data.labels.push(now.toLocaleTimeString());
+                
+                chart.update();
+            }
+
+            liveInterval = setInterval(() => {
+                updateTime();
+                updateChart();
+            }, 2000);
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            createCharts();
+            showWeek(1);
+        });
+    </script>
+</body>
+</html>
